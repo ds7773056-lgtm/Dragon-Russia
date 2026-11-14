@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dragon Russia — Онлайн игра</title>
+  <style>
+    /* Базовые настройки */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+    body { background-color: #f4f7fb; color: #111; overflow-x: hidden; }
+    
+    /* Шрифты */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&display=swap');
+    body { font-family: 'Montserrat', sans-serif; }
+
+    /* Главный синий экран (Hero) */
+    .hero {
+      background: #185ce8;
+      background-image: linear-gradient(rgba(24, 92, 232, 0.9), rgba(24, 92, 232, 0.9)), url('https://www.transparenttextures.com/patterns/cubes.png');
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-content { max-width: 600px; width: 100%; }
+
+    /* Шапка */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 30px;
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    .header .logo { display: flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; }
+    .header .logo .icon { background: #ffd600; width: 30px; height: 30px; border-radius: 8px 0 8px 0; transform: skewX(-15deg); }
+    .menu-btn { font-size: 30px; cursor: pointer; line-height: 1; color: white; }
+
+    /* Бейдж онлайна */
+    .online-badge {
+      background: rgba(0, 0, 0, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .dot { width: 8px; height: 8px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; }
+
+    /* Заголовки */
+    .hero h1 {
+      font-size: 42px;
+      line-height: 1.1;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    }
+    .hero p { font-size: 16px; margin-bottom: 25px; opacity: 0.9; line-height: 1.5; }
+
+    /* Желтая кнопка */
+    .btn-yellow {
+      display: inline-block;
+      background: #ffd600;
+      color: #111;
+      font-weight: 900;
+      font-size: 18px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 40px;
+      border-radius: 50px;
+      box-shadow: 0 10px 20px rgba(255, 214, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-yellow:active { transform: scale(0.95); box-shadow: 0 5px 10px rgba(255, 214, 0, 0.3); }
+
+    /* Картинка с персонажем (главный экран) */
+    .hero-image {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+      background-color: #2a4ba0; 
+      min-height: 250px; 
+    }
+    .hero-image img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    /* Белые секции */
+    .section { padding: 50px 20px; text-align: center; position: relative; }
+    .section h2 { font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; line-height: 1.1; }
+    .section p { font-size: 15px; color: #444; line-height: 1.5; max-width: 600px; margin: 0 auto; }
+
+    /* Блок с телефоном */
+    .phone-block {
+      max-width: 500px;
+      margin: 0 auto 30px;
+      border: 10px solid #111;
+      border-radius: 40px;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    .phone-block img { width: 100%; display: block; }
+
+    /* Точки карусели */
+    .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; }
+    .dots span { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
+    .dots span.active { background: #185ce8; }
+
+    /* Кнопки скачивания */
+    .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; margin: 30px auto 0; }
+    .download-btn {
+      background: white; border-radius: 15px; padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
+      font-weight: 800; font-size: 16px; color: #111; text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #eaeaea; transition: transform 0.2s;
+    }
+    .download-btn:active { transform: scale(0.95); }
+
+    /* Карточки новостей */
+    .news-slider { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 30px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .news-slider::-webkit-scrollbar { display: none; }
+    .news-card { flex: 0 0 85%; background: white; border-radius: 20px; overflow: hidden; scroll-snap-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: left; }
+    .news-card img { width: 100%; height: 180px; object-fit: cover; background: #ccc; }
+    .news-content { padding: 20px; }
+    .news-content h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+    .news-content a { color: #185ce8; font-weight: 700; font-size: 14px; text-decoration: none; border-bottom: 2px solid #185ce8; padding-bottom: 2px; }
+  </style>
+</head>
+<body>
+
+  <!-- СИНИЙ ЭКРАН -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="header">
+        <a href="#" class="logo">
+          <div class="icon"></div>
+          DRAGON
+        </a>
+        <div class="menu-btn">≡</div>
+      </div>
+
+      <div class="online-badge">
+        <div class="dot"></div>
+        <span>6 868 В СЕТИ</span>
+      </div>
+
+      <h1>ОНЛАЙН<br>ИГРА ПРО<br>РОССИЮ</h1>
+      <p>CRMP на Android: открытый мир и живые игроки.<br>Выбери путь и создай свою историю в Dragon Russia.</p>
+
+      <!-- Эта кнопка скроллит вниз к блоку скачивания -->
+      <a href="#download" class="btn-yellow">НАЧАТЬ ИГРУ</a>
+
+      <!-- Картинка с геймплеем (BMW) -->
+      <div class="hero-image">
+        <img src="game.jpg" alt="Геймплей Dragon Russia">
+      </div>
+    </div>
+  </div>
+
+  <!-- БЛОК С ТЕЛЕФОНОМ (ИНТЕРЕСНЫЕ РАБОТЫ) -->
+  <div class="section">
+    <div class="phone-block">
+      <img src="game.jpg" alt="Игра Dragon Russia">
+    </div>
+    
+    <div class="dots">
+      <span class="active"></span><span></span><span></span><span></span>
+    </div>
+
+    <h2>ИНТЕРЕСНЫЕ<br>РАБОТЫ</h2>
+    <p>В Dragon Russia можно выбрать занятие по душе и попробовать себя в самых разных направлениях. Одни профессии требуют смелости, другие — выносливости и крепких нервов.</p>
+  </div>
+
+  <!-- СКАЧИВАНИЕ -->
+  <div class="section" id="download" style="background: #e8f0fe;">
+    <p style="margin-bottom: 10px;">Скачай игру любым удобным тебе способом</p>
+    <h2>ПОДКЛЮЧАЙСЯ<br>К ИГРЕ!</h2>
+
+    <div class="download-grid">
+      
+      <!-- КНОПКА СКАЧИВАНИЯ APK -->
+      <!-- Ссылка указывает на ваше имя файла. Атрибут download заставляет его скачивать. -->
+      <a href="KRANIN GAMES_16.67.13759.apk" download class="download-btn">
+        <span style="font-size: 20px; color: #3DDC84;">🤖</span> Скачать APK
+      </a>
+
+      <!-- Остальные кнопки -->
+      <a href="#" class="download-btn">
+        <span style="font-size: 20px; color: #0079FF;">📦</span> RuStore
+      </a>
+      <a href="#" class="download-btn">
+        <span style="font-size: 20px; color: #4285F4;">▶</span> Google Play
+      </a>
+      <a href="#" class="download-btn">
+        <span style="font-size: 20px; color: #000;">🍏</span> iOS
+      </a>
+    </div>
+  </div>
+
+  <!-- НОВОСТИ -->
+  <div class="section" style="padding-bottom: 80px;">
+    <h2>НОВОСТИ<br>ПРОЕКТА</h2>
+    
+    <div class="news-slider">
+      <!-- Карточка 1 -->
+      <div class="news-card">
+        <img src="https://via.placeholder.com/400x200/333/fff?text=Dragon+Russia" alt="Новость">
+        <div class="news-content">
+          <h3>Новый лимитированный кейс «Драконье трио»</h3>
+          <a href="#">Читать новость</a>
+        </div>
+      </div>
+      <!-- Карточка 2 -->
+      <div class="news-card">
+        <img src="https://via.placeholder.com/400x200/555/fff?text=Обновление" alt="Новость">
+        <div class="news-content">
+          <h3>Глобальное обновление карты и новые работы</h3>
+          <a href="#">Читать новость</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
